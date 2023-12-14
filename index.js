@@ -13,6 +13,10 @@
     // Configurar CORS
     app.use(cors());
 
+    // Lectura y parseo del body "Debe ir antes de las rutas"
+    app.use( express.json() );
+
+
     // Base de datos
     dbConnection();
 
@@ -21,14 +25,9 @@
     // miguelgervis1 sf90fwuU7KFrB1Mp
 
     // Rutas
-    app.get( '/', (req, res) => {
-
-        res.json({
-            ok: true,
-            msg: 'Hola Mundo'
-        });
-
-    });
+    app.use('/api/usuarios', require('./routes/usuarios') );   
+    app.use('/api/login', require('./routes/auth') );
+    
 
     // Para levantarlo
     app.listen( process.env.PORT, () => {

@@ -10,7 +10,7 @@ const dbConnection = async () => {
 
     } catch ( err ) {
         console.log(err);
-        throw new Error('Erro a la hora de iniciar la BD ver logs');
+        throw new Error('Error a la hora de iniciar la BD ver logs');
     }
 }
 
