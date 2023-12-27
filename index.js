@@ -13,6 +13,9 @@
     // Configurar CORS
     app.use(cors());
 
+    // Carpeta pública
+    app.use( express.static('public') );
+
     // Lectura y parseo del body "Debe ir antes de las rutas"
     app.use( express.json() );
 
