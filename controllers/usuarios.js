@@ -5,13 +5,32 @@ const Usuario = require('../models/usuarios')
 const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async(req, res) => {
+
+    const desde = Number(req.query.desde) || 0;
     
     // Para traernos todos los usuarios que esten grabados en la BD
-    const usuarios = await Usuario.find({}, 'nombre email role google');
+    // const usuarios = await Usuario
+    //                             .find({}, 'nombre email role google')
+    //                             .skip( desde )
+    //                             .limit( 5 );
+
+    // const total = await Usuario.countDocuments();
+
+    // Refactorizacion del codigo de arriba para no tener dos await ya qe podria hacer que la BD sea lenta 
+    // de esta forma ambas promesas se ejecutan de manera simultanea y los resultados quedan en posicion del arreglo
+    const [ usuarios, total ] = await Promise.all([
+        Usuario
+            .find({}, 'nombre email role google img')
+            .skip( desde )
+            .limit( 5 ),
+
+        Usuario.countDocuments()
+    ])
 
     res.json({
         ok: true,
         usuarios,
+        total,
         // esto es lo que yo configure en mi middleware para compartir informacion en las peticiones
         uid: req.uid
     });
