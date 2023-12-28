@@ -25,11 +25,19 @@ router.post( '/',
 );
 
 router.put( '/:id',
-     [ ], 
+     [ 
+          validarJWT,
+          check('nombre','El nombre del medico es obligatorio').not().isEmpty(),
+          check('hospital','El id del hospital tiene que ser un ID generado por mongoose').isMongoId(),
+          validarCampos
+     ], 
      actualizarMedico
 );
 
-router.delete( '/:id', borrarMedico)
+router.delete( '/:id',
+     validarJWT,
+     borrarMedico
+)
 
 
 module.exports = router;

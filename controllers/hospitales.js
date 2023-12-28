@@ -39,17 +39,82 @@ const crearHospital = async (req, res = response) => {
     }
 }
 
-const actualizarHospital = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'actualizarHospital'
-    })
+const actualizarHospital = async (req, res = response) => {
+
+    const hospitalId = req.params.id;
+    const uid = req.uid;
+
+    try {    
+
+        // Primero verificamos a ver si existe un hospital con ese id
+        const hospitalDB = await Hospital.findById( hospitalId );
+
+        if ( !hospitalDB ) {
+            return    res.status(404).json({
+                ok: true,
+                msg: 'No existe un hospital con ese id',
+            });
+        }
+
+        // Le establecemos el nuevo nombre al hospital que viene en el body de la peticion
+        const cambiosHospital = {
+            ...req.body,
+            // con esto tenemos el ultimo usuario que hizo la modificacion
+            usuario: uid
+        }
+
+        // finalmente guardamos los cambios actualizados en la BD
+        const hospitalActualizado = await Hospital.findByIdAndUpdate( hospitalId, cambiosHospital, { new: true } );
+
+        res.json({
+            ok: true,
+            hospital: hospitalActualizado
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
 }
-const borrarHospital = (req, res = response) => {
-    res.json({
-        ok: true,
-        msg: 'borrarHospital'
-    })
+
+const borrarHospital = async (req, res = response) => {
+    
+    const hospitalId = req.params.id;
+
+    try {
+        
+
+        // Primero verificamos a ver si existe un hospital con ese id
+        const hospitalDB = await Hospital.findById( hospitalId );
+
+        if ( !hospitalDB ) {
+            return    res.status(404).json({
+                ok: true,
+                msg: 'No existe un hospital con ese id',
+            });
+        }
+
+        await Hospital.findByIdAndDelete( hospitalId );
+
+        res.json({
+            ok: true,
+            msg: 'Hospital Borrado'
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+    }
 }
 
 
