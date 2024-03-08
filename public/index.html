@@ -10,7 +10,7 @@
 
     <div id="buttonDiv"></div>
 
-    <script src="https://accounts.google.com/gsi/client" async></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
 
       var url = 'http://localhost:2470/api/login/google'
@@ -33,7 +33,9 @@
           });
 
           google.accounts.id.renderButton(
-            document.getElementById("buttonDiv"),
+            // document.getElementById("buttonDiv"),
+            // Hacemos referencia al boton
+            this.googleBtn.nativeElement,
             { theme: "outline", size: "large" }  // customization attributes
           );
           google.accounts.id.prompt(); // also display the One Tap dialog
